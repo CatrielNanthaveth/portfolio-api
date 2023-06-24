@@ -6,6 +6,8 @@ const pkg = require('../package.json');
 
 const port = process.env.PORT || 3000;
 
+const app = express();
+
 app.set('pkg', pkg);
 app.use(cors());
 app.use(morgan('dev'));
@@ -22,7 +24,7 @@ app.get('/', (req, res) => {
         name: app.get('pkg').name,
         author: app.get('pkg').author,
         description: app.get('pkg').description,
-        version:  app.get('pkg').version,
+        version: app.get('pkg').version,
     });
 });
 
