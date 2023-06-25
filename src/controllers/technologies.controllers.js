@@ -32,7 +32,9 @@ const createTechnology = async (req, res, next) => {
 
         if (technology.rows[0]) return res.status(400).json({ message: "technology already created" });
 
-        const result = await pool.query(`INSERT INTO technologies (tags, title, description) VALUES ('${tags}', '${title}', ${description}) RETURNING * ;`);
+        const query = 'INSERT INTO technologies (tags, title, description) VALUES ($1::text[], $2, $3) RETURNING *';
+        const result = await pool.query(query, [tags, title, description]);
+
         res.status(200).json({ message: 'successfully created' });
     } catch (error) {
         next(error);
@@ -60,7 +62,8 @@ const updateTechnology = async (req, res, next) => {
         const technology_id = req.params.id;
         const { tags, title, description } = req.body;
 
-        const result = await pool.query(`UPDATE technologies SET tags = '${tags}', title = '${title}', description = '${description}' WHERE id = ${technology_id} RETURNING * ;`);
+        const query = "UPDATE technologies SET tags = '$1', title = '$2', description = '$3' WHERE id = $4} RETURNING * ;"
+        const result = await pool.query(query, [tags, title, description, technology_id]);
 
         if (result.rowCount === 0) return res.status(404).json({
             message: 'technology not found'

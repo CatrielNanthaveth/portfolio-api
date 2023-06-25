@@ -32,7 +32,8 @@ const createProject = async (req, res, next) => {
 
         if (project.rows[0]) return res.status(400).json({ message: "project already created" });
 
-        const result = await pool.query(`INSERT INTO projects (tags, title, description, url) VALUES ('${tags}', '${title}', ${description}, '${url}') RETURNING * ;`);
+        const query = "INSERT INTO projects (tags, title, description, url) VALUES ($1::text[], $2, $3, $4) RETURNING * ;"
+        const result = await pool.query(query, [tags, title, description, url]);
         res.status(200).json({ message: 'successfully created' });
     } catch (error) {
         next(error);
@@ -60,7 +61,8 @@ const updateProject = async (req, res, next) => {
         const project_id = req.params.id;
         const { tags, title, description, url } = req.body;
 
-        const result = await pool.query(`UPDATE projects SET tags = '${tags}', title = '${title}', description = '${description}', url = '${url} WHERE id = ${project_id}' RETURNING * ;`);
+        const query = "UPDATE projects SET tags = '$1::text[]', title = '$2', description = '$3', url = '$4' WHERE id = $5' RETURNING * ;"
+        const result = await pool.query(query, [tags, title, description, url, project_id]);
 
         if (result.rowCount === 0) return res.status(404).json({
             message: 'project not found'

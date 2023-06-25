@@ -26,7 +26,7 @@ const getSingleUser = async (req, res, next) => {
 };
 
 const createUser = async (req, res, next) => {
-    const { email, username, password } = req.body;
+    const { email, username, password, role } = req.body;
 
     try {
 
@@ -34,7 +34,8 @@ const createUser = async (req, res, next) => {
 
         if (user.rows[0]) return res.status(400).json({ message: "Account already created" });
 
-        const result = await pool.query(`INSERT INTO users (email, username, password) VALUES ('${email}', '${username}', '${password}') RETURNING * ;`);
+        const query = "INSERT INTO users (email, username, password, role) VALUES ('$1', '$2', '$3', '$4::text[]') RETURNING * ;"
+        const result = await pool.query(query, [email, username, password, role]);
         const token = jwt.sign({ id: result.rows[0].id }, process.env.SECRET, {
             expiresIn: 7200 //24 horas
         })
@@ -64,9 +65,10 @@ const deleteUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
         const user_id = req.params.id;
-        const { email, username, password } = req.body;
+        const { email, username, password, role } = req.body;
 
-        const result = await pool.query(`UPDATE users SET email = '${email}', username = '${username}', password = '${password}' WHERE id = ${user_id} RETURNING * ;`);
+        const query = "UPDATE users SET email = '$1', username = '$2', password = '$3', role = '$4::text[]' WHERE id = $5 RETURNING * ;"
+        const result = await pool.query(query, [email, username, password, role, user_id]);
 
         if (result.rowCount === 0) return res.status(404).json({
             message: 'user not found'

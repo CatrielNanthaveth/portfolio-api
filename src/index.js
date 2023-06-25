@@ -13,11 +13,21 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const userRoutes = require('./routes/users.routes');
+const technologyRoutes = require('./routes/technologies.routes');
+const projectRoutes = require('./routes/projects.routes');
+const authRoutes = require('./routes/auth.routes');
+
 app.use((err, req, res, next) => {
     return res.status(400).json({
         message: err.message
     })
 });
+
+app.use(projectRoutes);
+app.use(technologyRoutes);
+app.use(userRoutes);
+app.use(authRoutes);
 
 app.get('/', (req, res) => {
     res.json({

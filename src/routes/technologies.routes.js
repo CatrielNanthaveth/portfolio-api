@@ -1,15 +1,16 @@
 const { Router } = require('express');
+const { getAllTechnologies, getSingleTechnology, createTechnology, deleteTechnology, updateTechnology } = require('../controllers/technologies.controllers');
 
 const router = Router();
 
 router.get('/technologies', getAllTechnologies);
 
-router.get('/technology/:id', getSingleTechnology);
+router.get('/technologies/:id', getSingleTechnology);
 
-router.post('/technology', createTechnology);
+router.post('/technologies', createTechnology);
 
-router.delete('/technology/:id', deleteTechnology);
+router.delete('/technologies/:id', deleteTechnology);
 
-router.put('/technology/:id', updateTechnology);
+router.put('/technologies/:id', updateTechnology);
 
 module.exports = router;
