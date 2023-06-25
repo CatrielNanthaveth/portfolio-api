@@ -60,7 +60,7 @@ const updateProject = async (req, res, next) => {
         const project_id = req.params.id;
         const { tags, title, description, url } = req.body;
 
-        const result = await pool.query(`UPDATE projects SET tags = '${tags}', title = '${title}', description = '${description}' WHERE id = ${project_id}, url = '${url}' RETURNING * ;`);
+        const result = await pool.query(`UPDATE projects SET tags = '${tags}', title = '${title}', description = '${description}', url = '${url} WHERE id = ${project_id}' RETURNING * ;`);
 
         if (result.rowCount === 0) return res.status(404).json({
             message: 'project not found'
