@@ -36,7 +36,7 @@ const createUser = async (req, res, next) => {
 
         const query = "INSERT INTO users (email, username, password, role) VALUES ('$1', '$2', '$3', '$4::text[]') RETURNING * ;"
         const result = await pool.query(query, [email, username, password, role]);
-        const token = jwt.sign({ id: result.rows[0].id }, process.env.SECRET, {
+        const token = jwt.sign({ id: result.rows[0].id, role: result.rows[0].role }, process.env.SECRET, {
             expiresIn: 7200 //24 horas
         })
 

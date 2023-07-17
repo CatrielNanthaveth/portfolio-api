@@ -24,6 +24,7 @@ app.use((err, req, res, next) => {
     })
 });
 
+
 app.use(projectRoutes);
 app.use(technologyRoutes);
 app.use(userRoutes);
