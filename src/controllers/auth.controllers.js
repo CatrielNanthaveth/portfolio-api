@@ -8,7 +8,7 @@ const signIn = async (req, res) => {
 
     
     if (!(user.rows[0].password === req.body.password)) return res.status(401).json({ token: null, message: "Invalid password" });
-    const token = jwt.sign({ id: user.rows[0].id }, process.env.SECRET, {
+    const token = jwt.sign({ id: user.rows[0].id, role: result.rows[0].role }, process.env.SECRET, {
         expiresIn: 86400 //24 horas
     })
     res.json({ token });
