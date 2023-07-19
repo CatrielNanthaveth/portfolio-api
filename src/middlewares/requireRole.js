@@ -9,7 +9,7 @@ function requireRole(role) {
   
       jwt.verify(token, process.env.SECRET, (err, decoded) => {
         if (err) {
-          return res.status(401).json({ message: 'Token inválido' });
+          return err;
         }
   
         if (decoded.role !== role) {
